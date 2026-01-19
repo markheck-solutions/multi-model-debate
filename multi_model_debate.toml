@@ -1,0 +1,53 @@
+# Multi-Model Debate Configuration
+# Copy this file to your project root and customize as needed.
+
+[debate]
+critic_rounds = 4                # Rounds for Critic vs Critic debate
+strategist_rounds = 4            # Rounds for Strategist vs Winner debate
+
+[models]
+# Available models for debates - order matters for critic assignment
+# First two non-strategist models become critic_a and critic_b
+available = ["claude", "gemini", "codex"]
+default_timeout = 300      # 5 minutes per API call
+min_response_length = 100  # Minimum chars for valid response
+
+[roles]
+# Dynamic role assignment configuration
+# Roles are assigned based on the strategist:
+#   Strategist = whoever initiated the debate (auto-detected or override below)
+#   Critics = all available models EXCEPT strategist's family
+#   Judge = strategist's family (isolated instance - judges critics, not the plan)
+#
+# Optional override - if not set, auto-detect from environment
+# strategist = "claude"
+
+[pre_debate]
+# Pre-debate protocol settings
+# The protocol injects current date context for relevance assessment
+enabled = true            # Enable pre-debate protocol (lightweight, <5 seconds)
+
+[retry]
+max_attempts = 3           # Total attempts (1 initial + 2 retries)
+base_delay = 30            # Base delay in seconds (doubles each retry)
+
+[notification]
+enabled = true
+command = "notify-send"    # Linux; macOS: use osascript wrapper
+
+# CLI command configurations
+# Customize if using wrappers or non-standard paths
+
+[cli.codex]
+command = "codex"
+subcommand = "exec"
+input_mode = "stdin"       # Prompt via stdin with "-" arg
+timeout = 600              # Codex with "xhigh" reasoning needs longer timeout (10 min)
+
+[cli.gemini]
+command = "gemini"
+input_mode = "positional"  # Prompt as positional argument
+
+[cli.claude]
+command = "claude"
+input_mode = "positional"

@@ -1,0 +1,102 @@
+You are generating a summary report for a non-technical human arbiter who will make final decisions on this proposal. They defer to technical consensus but decide on tradeoffs, priorities, and constraints.
+
+Generate a comprehensive summary with these sections:
+
+## 1. EXECUTIVE SUMMARY
+3-5 sentences: What was reviewed, who won, overall verdict (APPROVED / CONDITIONAL / BLOCKED).
+
+## 2. ISSUES BY CATEGORY
+
+### TECHNICAL FACTS (Defer to consensus)
+Issues where models agree on objective technical reality.
+| Issue | Severity | Consensus | Status |
+|-------|----------|-----------|--------|
+
+### TRADEOFFS (Human decision required)
+Issues where both positions have merit - arbiter chooses based on values.
+| Tradeoff | Option A | Option B | Models Preferred |
+|----------|----------|----------|------------------|
+
+### CONSTRAINTS (Human decision required)
+Issues that question stated constraints (budget, tech stack, timeline).
+| Constraint Challenged | Critique | Your Call |
+|-----------------------|----------|-----------|
+
+## 3. WHAT WAS RESOLVED
+
+- **Defended successfully:** Strategist convinced the critic
+- **Conceded:** Strategist agreed with critique
+- **Technical consensus:** All models agree on fix
+
+## 4. WHAT NEEDS YOUR DECISION
+
+| # | Decision Needed | Context | Options |
+|---|-----------------|---------|---------|
+
+## 5. RECOMMENDED ACTIONS
+
+| Priority | Action | Why | Effort |
+|----------|--------|-----|--------|
+| BLOCKER | ... | ... | S/M/L |
+| HIGH | ... | ... | S/M/L |
+| MEDIUM | ... | ... | S/M/L |
+
+## 6. MINORITY DISSENT
+
+Valid points from the losing side worth reconsidering:
+| Point | Raised By | Why Rejected | Reconsider? |
+|-------|-----------|--------------|-------------|
+
+## 7. PROPOSAL CROSS-REFERENCE
+
+| Proposal Section | Issues Found | Severity |
+|------------------|--------------|----------|
+
+## 8. MY RECOMMENDATION
+
+As the Strategist (the proposal defender), provide your honest assessment:
+- What do YOU think the arbiter should decide on each tradeoff and why?
+- Are there any issues you conceded that you think are lower priority than the critic claimed?
+- Are there any defended points you're less confident about in hindsight?
+- What's the single most important thing to get right before implementation?
+
+Be direct and share your reasoning. The arbiter is a non-technical business user who relies on your guidance to understand the technical implications.
+
+---
+
+## 9. ISSUE RESPONSE CHECKLIST
+
+**IMPORTANT**: You MUST include this checklist showing how EVERY issue from the debate was addressed. Use this exact format:
+
+| Issue ID | Title | Response | Status |
+|----------|-------|----------|--------|
+
+For each issue raised during the debate (from baseline critiques through the defense rounds), add a row with:
+- **Issue ID**: The original issue ID (e.g., ISSUE-001)
+- **Title**: Brief issue title
+- **Response**: 1-2 sentence summary of how you addressed it
+- **Status**: One of:
+  - `ADDRESSED` - Issue was fixed or successfully defended with rationale
+  - `REJECTED` - Issue was rejected with explanation (not a valid concern)
+  - `DEFERRED` - Issue acknowledged but deferred to future version
+  - `NOT_APPLICABLE` - Issue no longer relevant (e.g., feature removed)
+
+Example:
+| ISSUE-001 | Role assignment bias | Defended: Judge evaluates critics, not plan | ADDRESSED |
+| ISSUE-002 | Env-var detection | Conceded: Will document | ADDRESSED |
+| ISSUE-003 | Research step undefined | N/A: Already removed in v4 | NOT_APPLICABLE |
+
+This checklist ensures all critiques were considered and nothing was overlooked.
+
+---
+
+## WHAT WOULD YOU LIKE TO DO?
+
+End with this exact question to the arbiter:
+
+"Based on this review, would you like me to:
+1. **Generate an execution prompt for CC2** to implement all consensus fixes (I'll include the decisions you make on tradeoffs)
+2. **Discuss specific issues further** before proceeding
+3. **Revise the game plan** to incorporate changes before implementation
+
+What's your preference?"
