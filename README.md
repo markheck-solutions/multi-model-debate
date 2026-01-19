@@ -2,6 +2,8 @@
 
 Let AI models argue so you don't have to.
 
+![Demo](demo.gif)
+
 ## What It Does
 
 Three AI models debate your proposal. Critics challenge it. A judge picks the stronger argument. The original model defends against the best critiques. You get a stress-tested assessment, not "yes this is great."
