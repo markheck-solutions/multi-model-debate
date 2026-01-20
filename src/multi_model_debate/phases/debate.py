@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -71,7 +72,8 @@ class DebatePhase(Phase):
     def run(self) -> None:
         """Execute the debate phase.
 
-        Runs multiple rounds of critic A responding to critic B and vice versa.
+        Runs multiple rounds where both critics respond in parallel.
+        Each critic responds to the other's PREVIOUS round output.
         Uses rolling window context (only previous round's response).
         """
         game_plan = self.get_game_plan()
@@ -90,49 +92,59 @@ class DebatePhase(Phase):
         for round_num in range(1, self._rounds + 1):
             console.print(f"  [bold]Round {round_num}/{self._rounds}[/bold]")
 
-            # Critic A responds to Critic B
             critic_a_artifact = self.artifact(
                 f"p2_r{round_num}_{self.critic_a_name}", is_json=True
             )
-            if not critic_a_artifact.is_valid():
-                console.print(f"    [cyan]{self.critic_a_name} responding...[/cyan]")
-                round_label = "Baseline" if round_num == 1 else f"Round {round_num - 1}"
-                critic_a_prompt = self.render_template(
-                    "debate_round.md.j2",
-                    lens_prompt=critic_a_lens,
-                    game_plan=game_plan,
-                    opponent_name=self.critic_b_name.upper(),
-                    round_label=round_label,
-                    opponent_response=critic_b_last,
-                )
-                response = self.critic_a.generate(critic_a_prompt)  # Uses per-model timeout
-                critic_a_artifact.write(response)
-                console.print(f"    [green]{self.critic_a_name} done[/green]")
-            else:
-                console.print(f"    [dim]{self.critic_a_name} (cached)[/dim]")
-
-            critic_a_last = critic_a_artifact.read()
-
-            # Critic B responds to Critic A
             critic_b_artifact = self.artifact(
                 f"p2_r{round_num}_{self.critic_b_name}", is_json=True
             )
-            if not critic_b_artifact.is_valid():
-                console.print(f"    [cyan]{self.critic_b_name} responding...[/cyan]")
-                critic_b_prompt = self.render_template(
-                    "debate_round.md.j2",
-                    lens_prompt=critic_b_lens,
-                    game_plan=game_plan,
-                    opponent_name=self.critic_a_name.upper(),
-                    round_label=f"Round {round_num}",
-                    opponent_response=critic_a_last,
-                )
-                response = self.critic_b.generate(critic_b_prompt)  # Uses per-model timeout
-                critic_b_artifact.write(response)
-                console.print(f"    [green]{self.critic_b_name} done[/green]")
-            else:
-                console.print(f"    [dim]{self.critic_b_name} (cached)[/dim]")
 
+            # Track which critics need to run
+            futures: dict[any, tuple[str, PhaseArtifact]] = {}
+            round_label = "Baseline" if round_num == 1 else f"Round {round_num - 1}"
+
+            with ThreadPoolExecutor(max_workers=2) as executor:
+                # Critic A responds to Critic B's previous output
+                if not critic_a_artifact.is_valid():
+                    console.print(f"    [cyan]{self.critic_a_name} responding...[/cyan]")
+                    critic_a_prompt = self.render_template(
+                        "debate_round.md.j2",
+                        lens_prompt=critic_a_lens,
+                        game_plan=game_plan,
+                        opponent_name=self.critic_b_name.upper(),
+                        round_label=round_label,
+                        opponent_response=critic_b_last,
+                    )
+                    future = executor.submit(self.critic_a.generate, critic_a_prompt)
+                    futures[future] = (self.critic_a_name, critic_a_artifact)
+                else:
+                    console.print(f"    [dim]{self.critic_a_name} (cached)[/dim]")
+
+                # Critic B responds to Critic A's previous output
+                if not critic_b_artifact.is_valid():
+                    console.print(f"    [cyan]{self.critic_b_name} responding...[/cyan]")
+                    critic_b_prompt = self.render_template(
+                        "debate_round.md.j2",
+                        lens_prompt=critic_b_lens,
+                        game_plan=game_plan,
+                        opponent_name=self.critic_a_name.upper(),
+                        round_label=round_label,
+                        opponent_response=critic_a_last,
+                    )
+                    future = executor.submit(self.critic_b.generate, critic_b_prompt)
+                    futures[future] = (self.critic_b_name, critic_b_artifact)
+                else:
+                    console.print(f"    [dim]{self.critic_b_name} (cached)[/dim]")
+
+                # Wait for parallel calls to complete
+                for future in as_completed(futures):
+                    name, artifact = futures[future]
+                    response = future.result()
+                    artifact.write(response)
+                    console.print(f"    [green]{name} done[/green]")
+
+            # Update "last" responses for next round
+            critic_a_last = critic_a_artifact.read()
             critic_b_last = critic_b_artifact.read()
 
     def get_final_positions(self) -> tuple[str, str]:

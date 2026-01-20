@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -69,7 +70,7 @@ class BaselinePhase(Phase):
     def run(self) -> None:
         """Execute the baseline phase.
 
-        Generates independent critiques from both critics.
+        Generates independent critiques from both critics in parallel.
         Skips already-completed artifacts on resume.
         """
         game_plan = self.get_game_plan()
@@ -77,32 +78,40 @@ class BaselinePhase(Phase):
         critic_a_lens = self.render_template("gpt_lens.md.j2")
         critic_b_lens = self.render_template("gem_lens.md.j2")
 
-        # Critic A baseline
         critic_a_artifact = self.artifact(f"p1_{self.critic_a_name}_baseline", is_json=True)
-        if not critic_a_artifact.is_valid():
-            console.print(f"  [cyan]{self.critic_a_name} baseline critique...[/cyan]")
-            critic_a_prompt = self.render_template(
-                "baseline_critique.md.j2",
-                lens_prompt=critic_a_lens,
-                game_plan=game_plan,
-            )
-            response = self.critic_a.generate(critic_a_prompt)  # Uses per-model timeout
-            critic_a_artifact.write(response)
-            console.print(f"  [green]{self.critic_a_name} baseline complete[/green]")
-        else:
-            console.print(f"  [dim]{self.critic_a_name} baseline (cached)[/dim]")
-
-        # Critic B baseline
         critic_b_artifact = self.artifact(f"p1_{self.critic_b_name}_baseline", is_json=True)
-        if not critic_b_artifact.is_valid():
-            console.print(f"  [cyan]{self.critic_b_name} baseline critique...[/cyan]")
-            critic_b_prompt = self.render_template(
-                "baseline_critique.md.j2",
-                lens_prompt=critic_b_lens,
-                game_plan=game_plan,
-            )
-            response = self.critic_b.generate(critic_b_prompt)  # Uses per-model timeout
-            critic_b_artifact.write(response)
-            console.print(f"  [green]{self.critic_b_name} baseline complete[/green]")
-        else:
-            console.print(f"  [dim]{self.critic_b_name} baseline (cached)[/dim]")
+
+        # Track which critics need to run
+        futures: dict[any, tuple[str, PhaseArtifact]] = {}
+
+        with ThreadPoolExecutor(max_workers=2) as executor:
+            if not critic_a_artifact.is_valid():
+                console.print(f"  [cyan]{self.critic_a_name} baseline critique...[/cyan]")
+                critic_a_prompt = self.render_template(
+                    "baseline_critique.md.j2",
+                    lens_prompt=critic_a_lens,
+                    game_plan=game_plan,
+                )
+                future = executor.submit(self.critic_a.generate, critic_a_prompt)
+                futures[future] = (self.critic_a_name, critic_a_artifact)
+            else:
+                console.print(f"  [dim]{self.critic_a_name} baseline (cached)[/dim]")
+
+            if not critic_b_artifact.is_valid():
+                console.print(f"  [cyan]{self.critic_b_name} baseline critique...[/cyan]")
+                critic_b_prompt = self.render_template(
+                    "baseline_critique.md.j2",
+                    lens_prompt=critic_b_lens,
+                    game_plan=game_plan,
+                )
+                future = executor.submit(self.critic_b.generate, critic_b_prompt)
+                futures[future] = (self.critic_b_name, critic_b_artifact)
+            else:
+                console.print(f"  [dim]{self.critic_b_name} baseline (cached)[/dim]")
+
+            # Wait for parallel calls to complete
+            for future in as_completed(futures):
+                name, artifact = futures[future]
+                response = future.result()
+                artifact.write(response)
+                console.print(f"  [green]{name} baseline complete[/green]")
