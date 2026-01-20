@@ -105,9 +105,7 @@ class DebatePhase(Phase):
                     round_label=round_label,
                     opponent_response=critic_b_last,
                 )
-                response = self.critic_a.generate(
-                    critic_a_prompt, timeout=self.config.models.default_timeout
-                )
+                response = self.critic_a.generate(critic_a_prompt)  # Uses per-model timeout
                 critic_a_artifact.write(response)
                 console.print(f"    [green]{self.critic_a_name} done[/green]")
             else:
@@ -129,9 +127,7 @@ class DebatePhase(Phase):
                     round_label=f"Round {round_num}",
                     opponent_response=critic_a_last,
                 )
-                response = self.critic_b.generate(
-                    critic_b_prompt, timeout=self.config.models.default_timeout
-                )
+                response = self.critic_b.generate(critic_b_prompt)  # Uses per-model timeout
                 critic_b_artifact.write(response)
                 console.print(f"    [green]{self.critic_b_name} done[/green]")
             else:

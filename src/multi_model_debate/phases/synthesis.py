@@ -105,7 +105,7 @@ class PeerReviewPhase(Phase):
                 loser_final=loser_final,
             )
 
-            response = winner_model.generate(prompt, timeout=self.config.models.default_timeout)
+            response = winner_model.generate(prompt)  # Uses per-model timeout
             peer_review_artifact.write(response)
             console.print("  [green]Peer review complete[/green]")
         else:

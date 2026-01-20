@@ -114,7 +114,7 @@ class JudgePhase(Phase):
                 critic_b_final=critic_b_final,
             )
 
-            response = self.judge.generate(prompt, timeout=self.config.models.default_timeout)
+            response = self.judge.generate(prompt)  # Uses per-model timeout from config
             decision_artifact.write(response)
 
             # Extract winner

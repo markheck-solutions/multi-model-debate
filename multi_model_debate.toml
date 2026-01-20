@@ -51,3 +51,4 @@ input_mode = "positional"  # Prompt as positional argument
 [cli.claude]
 command = "claude"
 input_mode = "positional"
+timeout = 600              # Claude also needs longer timeout for Judge/Defense phases

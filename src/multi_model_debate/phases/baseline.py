@@ -86,9 +86,7 @@ class BaselinePhase(Phase):
                 lens_prompt=critic_a_lens,
                 game_plan=game_plan,
             )
-            response = self.critic_a.generate(
-                critic_a_prompt, timeout=self.config.models.default_timeout
-            )
+            response = self.critic_a.generate(critic_a_prompt)  # Uses per-model timeout
             critic_a_artifact.write(response)
             console.print(f"  [green]{self.critic_a_name} baseline complete[/green]")
         else:
@@ -103,9 +101,7 @@ class BaselinePhase(Phase):
                 lens_prompt=critic_b_lens,
                 game_plan=game_plan,
             )
-            response = self.critic_b.generate(
-                critic_b_prompt, timeout=self.config.models.default_timeout
-            )
+            response = self.critic_b.generate(critic_b_prompt)  # Uses per-model timeout
             critic_b_artifact.write(response)
             console.print(f"  [green]{self.critic_b_name} baseline complete[/green]")
         else:

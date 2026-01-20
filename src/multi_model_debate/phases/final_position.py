@@ -236,9 +236,7 @@ class FinalPositionPhase(Phase):
             )
 
             # Automated CLI invocation - no more file-based handoff
-            response = self.strategist.generate(
-                prompt, timeout=self.config.models.default_timeout
-            )
+            response = self.strategist.generate(prompt)  # Uses per-model timeout
             final_position_artifact.write(response)
             # Journal the Strategist response for audit trail
             self.journal_response(round_num=0, response=response)

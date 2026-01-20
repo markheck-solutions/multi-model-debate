@@ -101,9 +101,7 @@ class DefensePhase(Phase):
                 strategist_lens=strategist_lens,
                 peer_review=peer_review,
             )
-            response = self.strategist.generate(
-                prompt, timeout=self.config.models.default_timeout
-            )
+            response = self.strategist.generate(prompt)  # Uses per-model timeout
             strategist_initial.write(response)
             # Journal the Strategist response for audit trail
             self.journal_response(round_num=0, response=response)
@@ -130,9 +128,7 @@ class DefensePhase(Phase):
                     round_label=round_label,
                     strategist_response=strategist_last,
                 )
-                response = winner_model.generate(
-                    prompt, timeout=self.config.models.default_timeout
-                )
+                response = winner_model.generate(prompt)  # Uses per-model timeout
                 winner_artifact.write(response)
                 console.print(f"    [green]{winner_name} done[/green]")
             else:
@@ -150,9 +146,7 @@ class DefensePhase(Phase):
                     round_number=round_num,
                     winner_response=winner_last,
                 )
-                response = self.strategist.generate(
-                    prompt, timeout=self.config.models.default_timeout
-                )
+                response = self.strategist.generate(prompt)  # Uses per-model timeout
                 strategist_artifact.write(response)
                 # Journal the Strategist response for audit trail
                 self.journal_response(round_num=round_num, response=response)
