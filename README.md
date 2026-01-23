@@ -2,7 +2,7 @@
 
 **Get your ideas stress-tested by AI before you build them.**
 
-You know that feeling when you're about to start a project and you *wish* you could get a few smart people to poke holes in your plan first? This tool does exactly that — except the "smart people" are different AI models debating each other about your idea.
+You know that feeling when you're about to start a project and you *wish* you could get a few smart people to poke holes in your plan first? This tool does exactly that, except the "smart people" are different AI models debating each other about your idea.
 
 ![Demo](demo.gif)
 
@@ -117,8 +117,8 @@ You should see a list of commands.
 If you want to use this tool from inside Claude Code by saying things like "run the debate tool", you need to add instructions to a special file called **CLAUDE.md**.
 
 **Where to put it:**
-- `~/.claude/CLAUDE.md` — applies to ALL your projects (recommended)
-- Or `CLAUDE.md` in a specific project folder — applies only to that project
+- `~/.claude/CLAUDE.md` applies to ALL your projects (recommended)
+- Or `CLAUDE.md` in a specific project folder; applies only to that project
 
 **What to add:**
 
@@ -211,7 +211,7 @@ your-project/
         ├── p4_peer_review.md
         ├── p5_r1_strategist.md   ← Defense rounds
         ├── ...
-        └── p6_final_position.md  ← ⭐ THE FINAL SUMMARY (start here!)
+        └── p6_final_position.md  ← THE FINAL SUMMARY (start here!)
 ```
 
 ### The Summary File
@@ -222,7 +222,7 @@ The file you care about most is:
 runs/<latest-folder>/p6_final_position.md
 ```
 
-This is the **Final Position** — a structured summary of everything that happened in the debate, with clear recommendations for you.
+This is the **Final Position**: a structured summary of everything that happened in the debate, with clear recommendations for you.
 
 **Quick way to find it:**
 - From AI CLI: Say "show me the final position"
