@@ -8,16 +8,16 @@ You know that feeling when you're about to start a project and you *wish* you co
 
 ## What It Does
 
-You describe what you want to build. Three AI models then:
+You describe what you want to build. Two AI models then:
 
 1. **Critique your plan** independently (finding different problems)
 2. **Debate each other** about which issues matter most
 3. **A judge picks a winner** based on argument quality
 4. **The winning critic's points get consolidated**
-5. **Your original AI defends your plan** against the best criticisms
+5. **Your original AI defends your plan** against the winner
 6. **You get a final report** with clear recommendations
 
-The whole process takes about 10-15 minutes and runs automatically.
+The whole process takes about 10-20 minutes, *depending on complexity*, and runs automatically.
 
 ## Why Use This?
 
@@ -30,9 +30,9 @@ The whole process takes about 10-15 minutes and runs automatically.
 | No structure to the feedback | Organized report with priorities |
 
 **Best for:**
-- Architecture decisions ("Should we use microservices or a monolith?")
-- Feature designs ("Here's how I want to implement search...")
-- Migration plans ("We're moving from X to Y...")
+- Architecture decisions
+- Feature designs
+- Migration plans
 - Any plan where being wrong is expensive
 
 ---
@@ -43,22 +43,22 @@ You need **at least 2 AI CLIs** installed before using this tool:
 
 | AI | Command | How to Get It |
 |----|---------|---------------|
-| Claude | `claude` | ✅ You already have this if you're using Claude Code |
+| Claude Code | `claude` | [Install Claude Code](https://github.com/anthropics/claude-code) |
 | Codex | `codex` | [Install OpenAI Codex CLI](https://github.com/openai/codex) |
-| Gemini | `gemini` | [Install Google Gemini CLI](https://github.com/google-gemini/gemini-cli) |
+| Gemini CLI | `gemini` | [Install Google Gemini CLI](https://github.com/google-gemini/gemini-cli) |
 
-**You need Claude + at least one other.** Test with: `claude --version`, `codex --version`, `gemini --version`
+Test with: `claude --version`, `codex --version`, `gemini --version`
 
 ---
 
 ## Quick Setup: Let Claude Do It For You
 
-If you're already using Claude Code, just paste this into your conversation:
+Already using Claude Code? Just paste this into your conversation:
 
 ```
 I want to install the Multi-Model Debate tool. Please:
 
-1. Check if pipx is installed, if not install it
+1. Check if pipx is installed. If not, install it
 2. Run: pipx install git+https://github.com/markheck-solutions/multi-model-debate.git
 3. Verify it works: multi-model-debate --help
 4. APPEND these instructions to my ~/.claude/CLAUDE.md file (create the file if it doesn't exist, but DO NOT overwrite any existing content):
@@ -68,7 +68,7 @@ I want to install the Multi-Model Debate tool. Please:
 When I say "run the debate tool", "start the debate", "do a peer review", or "review this":
 1. Save my plan to a markdown file in the current directory
 2. Run: multi-model-debate start <filename.md>
-3. Wait for it to complete (about 10-15 minutes)
+3. Wait for it to complete (about 10-20 minutes)
 4. Show me the Final Position from the runs folder
 
 When I say "resume the debate" or "continue the review":
@@ -77,10 +77,10 @@ When I say "resume the debate" or "continue the review":
 When I say "check debate status":
 1. Run: multi-model-debate status
 
-5. Confirm everything is set up
+Confirm everything is set up
 ```
 
-That's it! Claude will handle the rest. Once done, you can say "run the debate tool" anytime.
+That's it! Claude will handle the rest. Once done, you can say "run the debate tool" anytime during your Claude Code session.
 
 ---
 
@@ -112,7 +112,7 @@ multi-model-debate --help
 
 You should see a list of commands.
 
-### Step 2: Teach Claude Code the Commands
+### Step 2: Teach your model the Commands (Example using Claude Code)
 
 If you want to use this tool from inside Claude Code by saying things like "run the debate tool", you need to add instructions to a special file called **CLAUDE.md**.
 
@@ -148,15 +148,16 @@ When I say "check debate status":
 
 ## How to Use It
 
-### Option A: From Inside Claude Code (Recommended)
+### Option A: From Inside your AI CLI
+*The recommended option. Your AI will defend your plan with context* 
 
 Once you've completed setup, just talk naturally:
 
 **Start a review:**
-1. Describe your plan to Claude like you normally would
+1. Describe your plan to AI like you normally would
 2. Say **"run the debate tool"**
-3. Wait about 10-15 minutes
-4. Claude will show you the results
+3. Wait about 10-20 minutes
+4. Your AI CLI will show you the results
 
 **Other commands you can say:**
 
@@ -167,13 +168,13 @@ Once you've completed setup, just talk naturally:
 | "check debate status" | Shows progress |
 | "show me the final position" | Displays the results again |
 
-### Option B: Standalone (From Terminal)
+### Option B: Standalone
 
-You can also run the tool directly without Claude Code:
+You can also run the tool directly from the terminal:
 
 **From a file:**
 ```bash
-multi-model-debate start my-plan.md
+multi-model-debate start [my-plan].md
 ```
 
 **By typing your plan directly:**
@@ -210,7 +211,7 @@ your-project/
         ├── p4_peer_review.md
         ├── p5_r1_strategist.md   ← Defense rounds
         ├── ...
-        └── p6_final_position.md  ← ⭐ THE SUMMARY (start here!)
+        └── p6_final_position.md  ← ⭐ THE FINAL SUMMARY (start here!)
 ```
 
 ### The Summary File
@@ -224,7 +225,7 @@ runs/<latest-folder>/p6_final_position.md
 This is the **Final Position** — a structured summary of everything that happened in the debate, with clear recommendations for you.
 
 **Quick way to find it:**
-- From Claude Code: Say "show me the final position"
+- From AI CLI: Say "show me the final position"
 - From terminal: `ls -t runs/` shows newest folder first, then open `p6_final_position.md`
 
 ---
@@ -277,11 +278,11 @@ Define the burst capacity first. Everything else is refinement.
 - Install pipx first (see Step 1)
 
 **"No models available" or the tool can't find AI CLIs**
-- Make sure you have at least 2 AI CLIs installed (claude, codex, or gemini)
+- Make sure you have at least 2 AI CLIs installed (e.g., claude, codex, or gemini)
 - Test them: `claude --version`, `codex --version`, `gemini --version`
 
 **The debate seems stuck**
-- Say "check debate status" (in Claude Code) or run `multi-model-debate status`
+- Say "check debate status" (in AI CLI) or run `multi-model-debate status` (in terminal)
 - Say "resume the debate" or run `multi-model-debate resume`
 
 **Claude doesn't understand "run the debate tool"**
@@ -325,7 +326,7 @@ command = "notify-send"      # Linux (use "osascript" wrapper for Mac)
 
 | Role | What It Does | Recommendation |
 |------|--------------|----------------|
-| **strategist** | Defends your plan | Use your primary AI (usually Claude) |
+| **strategist** | Defends your plan | Use your primary AI |
 | **critics** | Find problems with your plan | Use 2+ different AIs for diverse perspectives |
 | **judge** | Picks which critic argued better | Same as strategist (different instance) |
 
@@ -412,21 +413,21 @@ Run a debate and check that your AI responds. If you see errors, double-check:
 
 ### Need Help?
 
-If you're using Claude Code, just ask:
+Just ask AI:
 
 > "Help me configure the debate tool to use [your AI name]"
 
-Claude can help you figure out the right settings for your AI's CLI.
+AI can help you figure out the right settings for its CLI.
 
 ---
 
 ## How This Was Built
 
-I'm not a developer. This tool was built entirely with Claude Code. I provided the vision and continuously questioned EVERYTHING. The code itself? All AI-generated.
+I'm not a developer. This tool was built entirely with Claude Code Opus 4.5. I provided the vision and continuously questioned EVERYTHING. The code itself? All AI-generated.
 
-If you're a developer reviewing this, I can't explain the architectural decisions or maintain this at a technical level. I only aggressively push AI for well-architected and best-in-class decisions and then have separate AI models critique it.
+If you're a developer reviewing this, I can't explain the architectural decisions or maintain this at a technical level. I only aggressively push AI for *well-architected* and *best-in-class* decisions and then have separate AI models critique it.
 
-If you're a non-developer curious how AI can enable you, here you go.
+If you're a non-developer curious how AI can enable you, I hope this helps.
 
 ---
 
