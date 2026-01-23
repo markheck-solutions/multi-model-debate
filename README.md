@@ -49,8 +49,6 @@ This tool works out of the box using the following three:
 | Codex | `codex` | [Install OpenAI Codex CLI](https://github.com/openai/codex) |
 | Gemini CLI | `gemini` | [Install Google Gemini CLI](https://github.com/google-gemini/gemini-cli) |
 
-Test with: `claude --version`, `codex --version`, `gemini --version`
-
 ---
 
 ## Quick Setup: Let Claude Do It For You
@@ -336,7 +334,7 @@ command = "notify-send"      # Linux (use "osascript" wrapper for Mac)
 
 ### Critic Perspectives (Lenses)
 
-Each critic approaches your plan with a different "lens" — a set of concerns they focus on.
+Each critic approaches your plan with a different "lens" *a set of concerns they focus on*
 
 **How it works:**
 
@@ -357,7 +355,8 @@ Think about each AI's strengths. Put the AI that's better at:
 - **Deep technical analysis** → first position (critic_1_lens)
 - **Practical/real-world concerns** → second position (critic_2_lens)
 
-If you're not sure, the order doesn't matter much — both critics will challenge your plan thoroughly.
+**Tip:** If you're unsure, Ask AI:
+> "Which model is better at [specific strength]?"
 
 ### Customizing Lenses
 
@@ -378,7 +377,7 @@ src/multi_model_debate/prompts/
 | Agriculture | Soil/climate assumptions, yield models | Regulatory compliance, supply chain |
 | Healthcare | Clinical accuracy, safety protocols | HIPAA compliance, patient outcomes |
 
-**Tip:** Ask Claude Code to help customize:
+**Tip:** Ask AI to help customize:
 > "Help me modify the debate tool's critic lenses for [your domain]"
 
 ---
@@ -392,9 +391,8 @@ The tool includes defaults for Claude, Codex, and Gemini. Want to use a differen
 The debate tool works by running commands in your terminal. Your AI needs a CLI (command-line interface) tool.
 
 **Examples of AI CLIs:**
-- **Ollama** (local models): `ollama run llama3 "your prompt"`
-- **LM Studio** (local models): Check if CLI exists
-- **Mistral**: Check for CLI availability
+- **Ollama**: `ollama run llama3 "your prompt"`
+- **[llm](https://llm.datasette.io/)**: `llm "your prompt"`
 
 **Test it first:** Open your terminal and try running your AI with a simple prompt. If it responds, you're good!
 
