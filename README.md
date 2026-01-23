@@ -39,7 +39,9 @@ The whole process takes about 10-20 minutes, *depending on complexity*, and runs
 
 ## Prerequisites
 
-You need **at least 2 AI CLIs** installed before using this tool:
+You need **at least 2 AI CLIs** installed before using this tool
+
+This tool works out of the box using the following three:
 
 | AI | Command | How to Get It |
 |----|---------|---------------|
