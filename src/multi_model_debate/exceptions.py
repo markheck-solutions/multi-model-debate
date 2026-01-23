@@ -78,6 +78,6 @@ class InsufficientCriticsError(ConfigError):
             f"Strategist: {self.strategist}\n\n"
             'Fix: Add models from other families (e.g., "codex", "gemini")\n\n'
             "Tip: For single-model review, skip this tool and prompt directly. For example:\n"
-            '"Review this proposal from 3 perspectives: devil\'s advocate, '
+            "\"Review this proposal from 3 perspectives: devil's advocate, "
             'domain expert, and end user."'
         )

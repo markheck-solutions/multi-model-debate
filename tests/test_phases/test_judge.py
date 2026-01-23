@@ -42,9 +42,7 @@ class TestJudgePhase:
         assert "p3_winner_decision" in names
         assert "p3_winner" in names
 
-    def test_extract_winner_critic_a(
-        self, tmp_run_dir: Path, default_config: Config
-    ) -> None:
+    def test_extract_winner_critic_a(self, tmp_run_dir: Path, default_config: Config) -> None:
         """Test extracting first critic as winner."""
         phase = JudgePhase(
             run_dir=tmp_run_dir,
@@ -62,9 +60,7 @@ codex raised more concrete issues.
         winner = phase._extract_winner(decision)
         assert winner == "codex"
 
-    def test_extract_winner_critic_b(
-        self, tmp_run_dir: Path, default_config: Config
-    ) -> None:
+    def test_extract_winner_critic_b(self, tmp_run_dir: Path, default_config: Config) -> None:
         """Test extracting second critic as winner."""
         phase = JudgePhase(
             run_dir=tmp_run_dir,
@@ -113,9 +109,7 @@ Gemini had better arguments.
         with pytest.raises(PhaseError):
             phase._extract_winner("No clear winner here.")
 
-    def test_get_winner_reads_file(
-        self, tmp_run_dir: Path, default_config: Config
-    ) -> None:
+    def test_get_winner_reads_file(self, tmp_run_dir: Path, default_config: Config) -> None:
         """Test getting winner from file."""
         (tmp_run_dir / "p3_winner.txt").write_text("WINNER=gemini\n")
 

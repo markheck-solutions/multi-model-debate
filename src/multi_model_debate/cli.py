@@ -129,6 +129,8 @@ def start(
                 raise typer.Exit(1)
             context = orchestrator.start_from_content(content)
         else:
+            # Type narrowing: game_plan is not None here (checked at line 114-116)
+            assert game_plan is not None
             # Validate file exists (since we removed exists=True from Argument)
             if not game_plan.exists():
                 console.print(f"[red]Error:[/red] File not found: {game_plan}")

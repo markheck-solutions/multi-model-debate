@@ -263,9 +263,7 @@ class FinalPositionPhase(Phase):
             console.print(
                 "  [yellow]Warning: No issue response checklist found in Final Position.[/yellow]"
             )
-            console.print(
-                "  [dim]The checklist helps verify all critiques were addressed.[/dim]"
-            )
+            console.print("  [dim]The checklist helps verify all critiques were addressed.[/dim]")
             return
 
         coverage = calculate_coverage(items)
@@ -273,10 +271,11 @@ class FinalPositionPhase(Phase):
 
         if coverage.invalid > 0:
             console.print(
-                f"  [yellow]Warning: {coverage.invalid} checklist item(s) have invalid status values.[/yellow]"
+                f"  [yellow]Warning: {coverage.invalid} checklist item(s) "
+                "have invalid status values.[/yellow]"
             )
             console.print(
-                f"  [dim]Valid statuses: ADDRESSED, REJECTED, DEFERRED, NOT_APPLICABLE[/dim]"
+                "  [dim]Valid statuses: ADDRESSED, REJECTED, DEFERRED, NOT_APPLICABLE[/dim]"
             )
 
     def _get_winner(self) -> str:

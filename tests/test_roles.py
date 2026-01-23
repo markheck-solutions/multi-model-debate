@@ -51,10 +51,12 @@ class TestAssignRoles:
 
     def test_claude_as_strategist(self) -> None:
         """Test role assignment when Claude is strategist."""
-        config = Config.from_dict({
-            "models": {"available": ["claude", "gemini", "codex"]},
-            "roles": {"strategist": "claude"},
-        })
+        config = Config.from_dict(
+            {
+                "models": {"available": ["claude", "gemini", "codex"]},
+                "roles": {"strategist": "claude"},
+            }
+        )
         roles = assign_roles(config)
 
         assert roles.strategist == "claude"
@@ -63,10 +65,12 @@ class TestAssignRoles:
 
     def test_gemini_as_strategist(self) -> None:
         """Test role assignment when Gemini is strategist."""
-        config = Config.from_dict({
-            "models": {"available": ["claude", "gemini", "codex"]},
-            "roles": {"strategist": "gemini"},
-        })
+        config = Config.from_dict(
+            {
+                "models": {"available": ["claude", "gemini", "codex"]},
+                "roles": {"strategist": "gemini"},
+            }
+        )
         roles = assign_roles(config)
 
         assert roles.strategist == "gemini"
@@ -75,10 +79,12 @@ class TestAssignRoles:
 
     def test_codex_as_strategist(self) -> None:
         """Test role assignment when Codex is strategist."""
-        config = Config.from_dict({
-            "models": {"available": ["claude", "gemini", "codex"]},
-            "roles": {"strategist": "codex"},
-        })
+        config = Config.from_dict(
+            {
+                "models": {"available": ["claude", "gemini", "codex"]},
+                "roles": {"strategist": "codex"},
+            }
+        )
         roles = assign_roles(config)
 
         assert roles.strategist == "codex"
@@ -87,20 +93,24 @@ class TestAssignRoles:
 
     def test_invalid_strategist_raises_error(self) -> None:
         """Test error when strategist not in available models."""
-        config = Config.from_dict({
-            "models": {"available": ["gemini", "codex"]},
-            "roles": {"strategist": "claude"},
-        })
+        config = Config.from_dict(
+            {
+                "models": {"available": ["gemini", "codex"]},
+                "roles": {"strategist": "claude"},
+            }
+        )
 
         with pytest.raises(ValueError, match="not in available models"):
             assign_roles(config)
 
     def test_zero_critics_raises_insufficient_critics_error(self) -> None:
         """Test error when only strategist is available (zero critics)."""
-        config = Config.from_dict({
-            "models": {"available": ["claude"]},
-            "roles": {"strategist": "claude"},
-        })
+        config = Config.from_dict(
+            {
+                "models": {"available": ["claude"]},
+                "roles": {"strategist": "claude"},
+            }
+        )
 
         with pytest.raises(InsufficientCriticsError) as exc_info:
             assign_roles(config)
@@ -119,10 +129,12 @@ class TestAssignRoles:
 
     def test_two_model_setup(self) -> None:
         """Test role assignment with only 2 models."""
-        config = Config.from_dict({
-            "models": {"available": ["claude", "gemini"]},
-            "roles": {"strategist": "claude"},
-        })
+        config = Config.from_dict(
+            {
+                "models": {"available": ["claude", "gemini"]},
+                "roles": {"strategist": "claude"},
+            }
+        )
         roles = assign_roles(config)
 
         assert roles.strategist == "claude"
@@ -131,10 +143,12 @@ class TestAssignRoles:
 
     def test_multiple_families_passes_validation(self) -> None:
         """Test that 2+ different model families passes validation."""
-        config = Config.from_dict({
-            "models": {"available": ["claude", "codex", "gemini"]},
-            "roles": {"strategist": "claude"},
-        })
+        config = Config.from_dict(
+            {
+                "models": {"available": ["claude", "codex", "gemini"]},
+                "roles": {"strategist": "claude"},
+            }
+        )
 
         # Should not raise - we have 2 critics from different families
         roles = assign_roles(config)
@@ -178,10 +192,12 @@ class TestRoleAssignmentScenarios:
         """Test example: Claude as Strategist."""
         # From REQUIREMENTS_V2.md table:
         # Strategist=Claude → Critics=Codex+Gemini, Judge=Claude
-        config = Config.from_dict({
-            "models": {"available": ["claude", "gemini", "codex"]},
-            "roles": {"strategist": "claude"},
-        })
+        config = Config.from_dict(
+            {
+                "models": {"available": ["claude", "gemini", "codex"]},
+                "roles": {"strategist": "claude"},
+            }
+        )
         roles = assign_roles(config)
 
         assert roles.strategist == "claude"
@@ -192,10 +208,12 @@ class TestRoleAssignmentScenarios:
         """Test example: Gemini as Strategist."""
         # From REQUIREMENTS_V2.md table:
         # Strategist=Gemini → Critics=Claude+Codex, Judge=Gemini
-        config = Config.from_dict({
-            "models": {"available": ["claude", "gemini", "codex"]},
-            "roles": {"strategist": "gemini"},
-        })
+        config = Config.from_dict(
+            {
+                "models": {"available": ["claude", "gemini", "codex"]},
+                "roles": {"strategist": "gemini"},
+            }
+        )
         roles = assign_roles(config)
 
         assert roles.strategist == "gemini"
@@ -206,10 +224,12 @@ class TestRoleAssignmentScenarios:
         """Test example: Codex as Strategist."""
         # From REQUIREMENTS_V2.md table:
         # Strategist=Codex → Critics=Claude+Gemini, Judge=Codex
-        config = Config.from_dict({
-            "models": {"available": ["claude", "gemini", "codex"]},
-            "roles": {"strategist": "codex"},
-        })
+        config = Config.from_dict(
+            {
+                "models": {"available": ["claude", "gemini", "codex"]},
+                "roles": {"strategist": "codex"},
+            }
+        )
         roles = assign_roles(config)
 
         assert roles.strategist == "codex"

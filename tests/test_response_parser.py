@@ -22,7 +22,7 @@ class TestExtractJsonBlock:
 
     def test_extracts_json_from_code_block(self) -> None:
         """Test extracting JSON from a code block."""
-        response = '''Here is my analysis:
+        response = """Here is my analysis:
 
 ```json
 {
@@ -31,7 +31,7 @@ class TestExtractJsonBlock:
 }
 ```
 
-That's my response.'''
+That's my response."""
         result = extract_json_block(response)
         assert result is not None
         assert '"has_new_issues": true' in result
@@ -44,7 +44,7 @@ That's my response.'''
 
     def test_handles_multiline_json(self) -> None:
         """Test handling of multiline JSON blocks."""
-        response = '''```json
+        response = """```json
 {
   "has_new_issues": true,
   "issues": [
@@ -54,7 +54,7 @@ That's my response.'''
     }
   ]
 }
-```'''
+```"""
         result = extract_json_block(response)
         assert result is not None
         assert "ISSUE-001" in result
@@ -65,9 +65,9 @@ class TestParseJsonResponse:
 
     def test_parses_json_block(self) -> None:
         """Test parsing JSON from code block."""
-        response = '''```json
+        response = """```json
 {"has_new_issues": true, "issues": [], "summary": "test"}
-```'''
+```"""
         result = parse_json_response(response)
         assert result["has_new_issues"] is True
         assert result["summary"] == "test"
@@ -80,9 +80,9 @@ class TestParseJsonResponse:
 
     def test_finds_json_in_text(self) -> None:
         """Test finding JSON object embedded in text."""
-        response = '''Some preamble text
+        response = """Some preamble text
 {"has_new_issues": true, "issues": []}
-Some trailing text'''
+Some trailing text"""
         result = parse_json_response(response)
         assert result["has_new_issues"] is True
 
@@ -98,7 +98,7 @@ class TestParseResponse:
 
     def test_parses_json_response(self) -> None:
         """Test parsing a proper JSON response."""
-        response = '''```json
+        response = """```json
 {
   "has_new_issues": true,
   "issues": [
@@ -111,7 +111,7 @@ class TestParseResponse:
   ],
   "summary": "Found one issue"
 }
-```'''
+```"""
         result = parse_response(response)
         assert isinstance(result, ParsedResponse)
         assert result.has_new_issues is True
@@ -261,26 +261,26 @@ class TestSchemaVersioning:
 
     def test_parse_response_with_version(self) -> None:
         """Test parsing response with schema_version field."""
-        response = '''```json
+        response = """```json
 {
   "schema_version": "1.0",
   "has_new_issues": true,
   "issues": [],
   "summary": "Test"
 }
-```'''
+```"""
         result = parse_response(response)
         assert result.schema_version == "1.0"
 
     def test_parse_response_without_version_defaults_to_legacy(self) -> None:
         """Test parsing response without version defaults to legacy."""
-        response = '''```json
+        response = """```json
 {
   "has_new_issues": true,
   "issues": [],
   "summary": "Test"
 }
-```'''
+```"""
         result = parse_response(response)
         assert result.schema_version == LEGACY_SCHEMA_VERSION
 
@@ -298,14 +298,14 @@ class TestSchemaVersioning:
 
     def test_schema_version_preserved_in_parsed_response(self) -> None:
         """Test schema version is preserved in ParsedResponse."""
-        response = '''```json
+        response = """```json
 {
   "schema_version": "2.0",
   "has_new_issues": false,
   "issues": [],
   "summary": "Future version"
 }
-```'''
+```"""
         result = parse_response(response)
         assert result.schema_version == "2.0"
 

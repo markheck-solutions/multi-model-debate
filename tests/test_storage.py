@@ -250,9 +250,7 @@ class TestVerifyGamePlanIntegrity:
 class TestJournaling:
     """Tests for Strategist response journaling."""
 
-    def test_journal_response_creates_file(
-        self, tmp_run_dir: Path, default_config: Config
-    ) -> None:
+    def test_journal_response_creates_file(self, tmp_run_dir: Path, default_config: Config) -> None:
         """Test journaling creates the journal file."""
         context = RunContext(
             run_dir=tmp_run_dir,
@@ -290,9 +288,7 @@ class TestJournaling:
         entry2 = json.loads(lines[1])
         assert entry2["round"] == 1
 
-    def test_journal_path_property(
-        self, tmp_run_dir: Path, default_config: Config
-    ) -> None:
+    def test_journal_path_property(self, tmp_run_dir: Path, default_config: Config) -> None:
         """Test journal_path property returns correct path."""
         context = RunContext(
             run_dir=tmp_run_dir,
@@ -530,9 +526,7 @@ class TestIntegrityHash:
         assert hash_file.exists()
         assert hash_file.read_text() == saved_hash
 
-    def test_validate_integrity_hash_returns_true_when_unchanged(
-        self, tmp_path: Path
-    ) -> None:
+    def test_validate_integrity_hash_returns_true_when_unchanged(self, tmp_path: Path) -> None:
         """Test validation returns True when nothing changed."""
         prompts_dir = tmp_path / "prompts"
         prompts_dir.mkdir()

@@ -92,8 +92,10 @@ class Orchestrator:
 
         # Dynamic role assignment based on strategist detection
         self.roles: RoleAssignment = assign_roles(config)
-        console.print(f"[dim]Roles: strategist={self.roles.strategist}, "
-                      f"critics={self.roles.critics}, judge={self.roles.judge}[/dim]")
+        console.print(
+            f"[dim]Roles: strategist={self.roles.strategist}, "
+            f"critics={self.roles.critics}, judge={self.roles.judge}[/dim]"
+        )
 
         # Get the two critics for debate phases
         self._critic_a_name, self._critic_b_name = get_critic_pair(self.roles)
@@ -232,7 +234,10 @@ class Orchestrator:
             console.print()
             console.print("[bold red]ERROR: Integrity check failed[/bold red]")
             console.print()
-            console.print("[yellow]Prompts, config, or environment have changed since this debate started.[/yellow]")
+            console.print(
+                "[yellow]Prompts, config, or environment have changed "
+                "since this debate started.[/yellow]"
+            )
             console.print(
                 "[yellow]A debate with changed state produces unreliable results.[/yellow]"
             )

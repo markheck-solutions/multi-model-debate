@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from rich.console import Console
 
@@ -82,25 +82,17 @@ class DebatePhase(Phase):
         critic_b_lens = self.render_template("gem_lens.md.j2")
 
         # Load baselines as starting point
-        critic_a_last = self.artifact(
-            f"p1_{self.critic_a_name}_baseline", is_json=True
-        ).read()
-        critic_b_last = self.artifact(
-            f"p1_{self.critic_b_name}_baseline", is_json=True
-        ).read()
+        critic_a_last = self.artifact(f"p1_{self.critic_a_name}_baseline", is_json=True).read()
+        critic_b_last = self.artifact(f"p1_{self.critic_b_name}_baseline", is_json=True).read()
 
         for round_num in range(1, self._rounds + 1):
             console.print(f"  [bold]Round {round_num}/{self._rounds}[/bold]")
 
-            critic_a_artifact = self.artifact(
-                f"p2_r{round_num}_{self.critic_a_name}", is_json=True
-            )
-            critic_b_artifact = self.artifact(
-                f"p2_r{round_num}_{self.critic_b_name}", is_json=True
-            )
+            critic_a_artifact = self.artifact(f"p2_r{round_num}_{self.critic_a_name}", is_json=True)
+            critic_b_artifact = self.artifact(f"p2_r{round_num}_{self.critic_b_name}", is_json=True)
 
             # Track which critics need to run
-            futures: dict[any, tuple[str, PhaseArtifact]] = {}
+            futures: dict[Any, tuple[str, PhaseArtifact]] = {}
             round_label = "Baseline" if round_num == 1 else f"Round {round_num - 1}"
 
             with ThreadPoolExecutor(max_workers=2) as executor:
@@ -139,7 +131,7 @@ class DebatePhase(Phase):
                 # Wait for parallel calls to complete
                 for future in as_completed(futures):
                     name, artifact = futures[future]
-                    response = future.result()
+                    response: str = future.result()
                     artifact.write(response)
                     console.print(f"    [green]{name} done[/green]")
 

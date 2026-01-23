@@ -23,10 +23,12 @@ def mock_models() -> dict[str, MagicMock]:
 @pytest.fixture
 def config() -> Config:
     """Create test configuration."""
-    return Config.from_dict({
-        "models": {"available": ["claude", "gemini", "codex"]},
-        "pre_debate": {"enabled": True},
-    })
+    return Config.from_dict(
+        {
+            "models": {"available": ["claude", "gemini", "codex"]},
+            "pre_debate": {"enabled": True},
+        }
+    )
 
 
 class TestPreDebateProtocol:

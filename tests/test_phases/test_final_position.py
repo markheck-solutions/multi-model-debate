@@ -1,7 +1,5 @@
 """Tests for Phase 6: Final Position, including checklist validation."""
 
-import pytest
-
 from multi_model_debate.phases.final_position import (
     VALID_CHECKLIST_STATUSES,
     ChecklistCoverage,

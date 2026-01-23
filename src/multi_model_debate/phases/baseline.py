@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from rich.console import Console
 
@@ -82,7 +82,7 @@ class BaselinePhase(Phase):
         critic_b_artifact = self.artifact(f"p1_{self.critic_b_name}_baseline", is_json=True)
 
         # Track which critics need to run
-        futures: dict[any, tuple[str, PhaseArtifact]] = {}
+        futures: dict[Any, tuple[str, PhaseArtifact]] = {}
 
         with ThreadPoolExecutor(max_workers=2) as executor:
             if not critic_a_artifact.is_valid():
@@ -112,6 +112,6 @@ class BaselinePhase(Phase):
             # Wait for parallel calls to complete
             for future in as_completed(futures):
                 name, artifact = futures[future]
-                response = future.result()
+                response: str = future.result()
                 artifact.write(response)
                 console.print(f"  [green]{name} baseline complete[/green]")
