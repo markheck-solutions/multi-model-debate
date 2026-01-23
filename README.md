@@ -132,7 +132,7 @@ Open (or create) the file and **add this at the bottom** (don't replace existing
 When I say "run the debate tool", "start the debate", "do a peer review", or "review this":
 1. Save my plan to a markdown file in the current directory
 2. Run: multi-model-debate start <filename.md>
-3. Wait for it to complete (about 10-15 minutes)
+3. Wait for it to complete (about 10-20 minutes)
 4. Show me the Final Position from the runs folder
 
 When I say "resume the debate" or "continue the review":
