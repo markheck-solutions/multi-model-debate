@@ -151,7 +151,9 @@ def create_claude_interactive_backend(
         stacklevel=2,
     )
     # Create with defaults - caller should use create_strategist_backend instead
-    default_cli = CLICommandConfig(command="claude", input_mode="positional")
+    default_cli = CLICommandConfig(
+        command="claude", input_mode="positional", flags=["-p", "--tools", "", "--"]
+    )
     default_retry = RetrySettings(max_attempts=3, base_delay=30)
     return StrategistBackend(
         cli_config=default_cli,

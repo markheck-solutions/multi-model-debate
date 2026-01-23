@@ -52,3 +52,4 @@ input_mode = "positional"  # Prompt as positional argument
 command = "claude"
 input_mode = "positional"
 timeout = 600              # Claude also needs longer timeout for Judge/Defense phases
+flags = ["-p", "--tools", "", "--"]  # Print mode, disable all tools, -- terminates options before prompt

@@ -86,6 +86,7 @@ class CLISettings(BaseModel):
         default_factory=lambda: CLICommandConfig(
             command="claude",
             input_mode="positional",
+            flags=["-p", "--tools", "", "--"],  # Print mode, disable built-in tools, -- terminates options
         )
     )
 
