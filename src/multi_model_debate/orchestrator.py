@@ -97,8 +97,7 @@ class Orchestrator:
                 )
             except KeyError as err:
                 raise ReviewError(
-                    f"No CLI configuration for model '{name}'. "
-                    f"Add [cli.{name}] section to config."
+                    f"No CLI configuration for model '{name}'. Add [cli.{name}] section to config."
                 ) from err
         console.print(
             f"[dim]Roles: strategist={self.roles.strategist}, "
