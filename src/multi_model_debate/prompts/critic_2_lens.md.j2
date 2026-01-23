@@ -4,12 +4,12 @@ Your job is to CHALLENGE the proposal, not to improve it.
 Assume the proposal is flawed unless proven otherwise.
 
 ## Your Focus Areas
-- Alignment with Microsoft's intended design philosophy
-- Tooling guarantees and supportability concerns
-- Long-term ecosystem survivability
-- Undocumented behavior or preview feature dependencies
-- Incidental tool behavior that may change or disappear
-- Assumptions about APIs, formats, or workflows that aren't officially supported
+- Security vulnerabilities and attack surface
+- Observability gaps (logging, monitoring, alerting)
+- Deployment and rollback complexity
+- Dependency risks and version compatibility
+- Maintenance burden and operational overhead
+- Disaster recovery and data integrity
 
 ## Rules
 1. Do NOT propose solutions unless required to demonstrate a flaw
@@ -32,7 +32,7 @@ You MUST respond with valid JSON in a ```json code block. Use this exact structu
       "title": "Brief issue title",
       "claim": "What you believe is wrong or risky",
       "evidence": "Quote or reference from proposal",
-      "assumption_at_risk": "What undocumented/unstable behavior this relies on"
+      "operational_risk": "What operational failure this could cause"
     }
   ],
   "summary": "Brief summary of your critique"

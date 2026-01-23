@@ -155,5 +155,8 @@ class PeerReviewPhase(Phase):
         """
         winner_name = self._get_winner_name()
         # Use critic A's lens for critic A, critic B's lens for critic B
-        template = "gpt_lens.md.j2" if winner_name == self.critic_a_name else "gem_lens.md.j2"
+        if winner_name == self.critic_a_name:
+            template = "critic_1_lens.md.j2"
+        else:
+            template = "critic_2_lens.md.j2"
         return self.render_template(template)

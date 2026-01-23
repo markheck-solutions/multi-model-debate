@@ -332,6 +332,53 @@ command = "notify-send"      # Linux (use "osascript" wrapper for Mac)
 
 > **Note:** The `critics` list must have at least 2 different AI models. This ensures diverse perspectives in the debate.
 
+### Critic Perspectives (Lenses)
+
+Each critic approaches your plan with a different "lens" — a set of concerns they focus on.
+
+**How it works:**
+
+```toml
+[roles]
+critics = ["gemini", "ollama"]
+# critic_1_lens↑      ↑critic_2_lens
+```
+
+| Position | Lens File | Default Focus |
+|----------|-----------|---------------|
+| First in list | `critic_1_lens.md.j2` | Architecture, logic, scalability, edge cases |
+| Second in list | `critic_2_lens.md.j2` | Security, deployment, maintenance, dependencies |
+
+**Choosing which AI gets which lens:**
+
+Think about each AI's strengths. Put the AI that's better at:
+- **Deep technical analysis** → first position (critic_1_lens)
+- **Practical/real-world concerns** → second position (critic_2_lens)
+
+If you're not sure, the order doesn't matter much — both critics will challenge your plan thoroughly.
+
+### Customizing Lenses
+
+The default lenses work well for software projects. For specialized domains, you can customize what each critic focuses on.
+
+**Lens files are located at:**
+```
+src/multi_model_debate/prompts/
+├── critic_1_lens.md.j2    # First critic's perspective
+└── critic_2_lens.md.j2    # Second critic's perspective
+```
+
+**Examples by domain:**
+
+| Domain | critic_1_lens could focus on | critic_2_lens could focus on |
+|--------|------------------------------|------------------------------|
+| Academia | Methodology rigor, statistical validity | Citation gaps, reproducibility, ethics |
+| Agriculture | Soil/climate assumptions, yield models | Regulatory compliance, supply chain |
+| Healthcare | Clinical accuracy, safety protocols | HIPAA compliance, patient outcomes |
+
+**Tip:** Ask Claude Code to help customize:
+> "Help me modify the debate tool's critic lenses for [your domain]"
+
 ---
 
 ## Using Other AI Models

@@ -166,7 +166,7 @@ class Phase(ABC):
         """Render a Jinja2 template.
 
         Args:
-            template_name: Name of template file (e.g., 'gpt_lens.md.j2').
+            template_name: Name of template file (e.g., 'critic_1_lens.md.j2').
             **kwargs: Template variables.
 
         Returns:

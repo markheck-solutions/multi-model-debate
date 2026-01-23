@@ -75,8 +75,8 @@ class BaselinePhase(Phase):
         """
         game_plan = self.get_game_plan()
         # Dynamic lens selection based on model
-        critic_a_lens = self.render_template("gpt_lens.md.j2")
-        critic_b_lens = self.render_template("gem_lens.md.j2")
+        critic_a_lens = self.render_template("critic_1_lens.md.j2")
+        critic_b_lens = self.render_template("critic_2_lens.md.j2")
 
         critic_a_artifact = self.artifact(f"p1_{self.critic_a_name}_baseline", is_json=True)
         critic_b_artifact = self.artifact(f"p1_{self.critic_b_name}_baseline", is_json=True)

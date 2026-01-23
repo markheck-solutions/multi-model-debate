@@ -78,8 +78,8 @@ class DebatePhase(Phase):
         """
         game_plan = self.get_game_plan()
         # Dynamic lens selection based on model
-        critic_a_lens = self.render_template("gpt_lens.md.j2")
-        critic_b_lens = self.render_template("gem_lens.md.j2")
+        critic_a_lens = self.render_template("critic_1_lens.md.j2")
+        critic_b_lens = self.render_template("critic_2_lens.md.j2")
 
         # Load baselines as starting point
         critic_a_last = self.artifact(f"p1_{self.critic_a_name}_baseline", is_json=True).read()

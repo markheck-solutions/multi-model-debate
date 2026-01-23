@@ -169,7 +169,10 @@ class DefensePhase(Phase):
     def _get_winner_lens(self, winner_name: str) -> str:
         """Get the winner's lens prompt."""
         # Use critic A's lens for critic A, critic B's lens for critic B
-        template = "gpt_lens.md.j2" if winner_name == self.critic_a_name else "gem_lens.md.j2"
+        if winner_name == self.critic_a_name:
+            template = "critic_1_lens.md.j2"
+        else:
+            template = "critic_2_lens.md.j2"
         return self.render_template(template)
 
     def get_final_responses(self) -> tuple[str, str]:
