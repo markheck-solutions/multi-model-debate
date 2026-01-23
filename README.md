@@ -298,20 +298,125 @@ Define the burst capacity first. Everything else is refinement.
 
 ## Configuration (Optional)
 
-The tool works out of the box, but you can customize it by creating a file called `multi_model_debate.toml` in your project folder:
+The tool works out of the box with Claude, Codex, and Gemini. To customize which AI models are used, create a configuration file.
+
+### Creating the Config File
+
+1. Open your project folder (where you run the debate tool)
+2. Create a new file called `multi_model_debate.toml`
+3. Copy this starter template:
 
 ```toml
+[roles]
+strategist = "claude"
+critics = ["gemini", "codex"]
+judge = "claude"
+
 [debate]
 critic_rounds = 4            # How many rounds the critics debate each other
 strategist_rounds = 4        # How many rounds your AI defends the plan
-
-[models]
-available = ["claude", "gemini", "codex"]   # Which AIs to use
 
 [notification]
 enabled = true               # Desktop notification when done
 command = "notify-send"      # Linux (use "osascript" wrapper for Mac)
 ```
+
+### What Each Role Does
+
+| Role | What It Does | Recommendation |
+|------|--------------|----------------|
+| **strategist** | Defends your plan | Use your primary AI (usually Claude) |
+| **critics** | Find problems with your plan | Use 2+ different AIs for diverse perspectives |
+| **judge** | Picks which critic argued better | Same as strategist (different instance) |
+
+> **Note:** The `critics` list must have at least 2 different AI models. This ensures diverse perspectives in the debate.
+
+---
+
+## Using Other AI Models
+
+The tool includes defaults for Claude, Codex, and Gemini. Want to use a different AI? Follow these steps.
+
+### Step 1: Make Sure Your AI Has a Command-Line Tool
+
+The debate tool works by running commands in your terminal. Your AI needs a CLI (command-line interface) tool.
+
+**Examples of AI CLIs:**
+- **Ollama** (local models): `ollama run llama3 "your prompt"`
+- **LM Studio** (local models): Check if CLI exists
+- **Mistral**: Check for CLI availability
+
+**Test it first:** Open your terminal and try running your AI with a simple prompt. If it responds, you're good!
+
+### Step 2: Find (or Create) Your Config File
+
+Look for `multi_model_debate.toml` in your project folder.
+
+**Don't have one?** Create it:
+1. Open your project folder
+2. Create a new text file
+3. Name it exactly: `multi_model_debate.toml`
+
+### Step 3: Add Your AI's Settings
+
+Open `multi_model_debate.toml` and add a section for your AI. Copy this template and fill in the blanks:
+
+```toml
+[cli.YOUR_AI_NAME]
+command = "your-cli-command"
+input_mode = "positional"
+```
+
+**Example for Ollama:**
+
+```toml
+[cli.ollama]
+command = "ollama"
+subcommand = "run"
+input_mode = "positional"
+flags = ["llama3"]
+```
+
+**What each setting means:**
+
+| Setting | What to Put | Example |
+|---------|-------------|---------|
+| `command` | The command you type in terminal | `"ollama"` |
+| `subcommand` | Extra word after command (if needed) | `"run"` |
+| `input_mode` | How the prompt is sent | `"positional"` (usually this) |
+| `flags` | Extra options (like model name) | `["llama3"]` |
+| `timeout` | Max seconds to wait (optional) | `600` |
+
+**Complete example with Ollama as a critic:**
+
+```toml
+[roles]
+strategist = "claude"
+critics = ["ollama", "gemini"]
+judge = "claude"
+
+[cli.ollama]
+command = "ollama"
+subcommand = "run"
+input_mode = "positional"
+flags = ["llama3"]
+timeout = 600
+```
+
+### Step 4: Test It
+
+Run a debate and check that your AI responds. If you see errors, double-check:
+- Is the CLI installed? (Try running it in terminal)
+- Is the spelling exactly right in the config?
+- Did you save the file?
+
+### Need Help?
+
+If you're using Claude Code, just ask:
+
+> "Help me configure the debate tool to use [your AI name]"
+
+Claude can help you figure out the right settings for your AI's CLI.
 
 ---
 

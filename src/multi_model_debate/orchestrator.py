@@ -72,9 +72,20 @@ class Orchestrator:
         self.config = config
         self.runs_dir = runs_dir
 
+        # Dynamic role assignment based on config
+        self.roles: RoleAssignment = assign_roles(config)
+
+        # Determine which models to load:
+        # - All role models (strategist, critics, judge)
+        # - Plus any additional in models.available
+        models_to_load: set[str] = set(self.roles.critics)
+        models_to_load.add(self.roles.strategist)
+        models_to_load.add(self.roles.judge)
+        models_to_load.update(config.models.available)
+
         # Load models dynamically from config
         self.models: dict[str, CLIModelBackend] = {}
-        for name in config.models.available:
+        for name in models_to_load:
             try:
                 cli_config = config.cli[name]
                 self.models[name] = create_cli_backend(
@@ -84,14 +95,11 @@ class Orchestrator:
                     min_response_length=config.models.min_response_length,
                     default_timeout=config.models.default_timeout,
                 )
-            except KeyError:
-                print(
-                    f"Warning: No CLI config for model '{name}', skipping",
-                    file=sys.stderr,
-                )
-
-        # Dynamic role assignment based on strategist detection
-        self.roles: RoleAssignment = assign_roles(config)
+            except KeyError as err:
+                raise ReviewError(
+                    f"No CLI configuration for model '{name}'. "
+                    f"Add [cli.{name}] section to config."
+                ) from err
         console.print(
             f"[dim]Roles: strategist={self.roles.strategist}, "
             f"critics={self.roles.critics}, judge={self.roles.judge}[/dim]"
@@ -115,12 +123,13 @@ class Orchestrator:
         self.judge_model: CLIModelBackend = judge
 
         # Strategist backend for phases 5 & 6 (fully automated via CLI)
-        # The Strategist uses the claude CLI for automated responses.
+        # Uses the strategist's CLI config, not hardcoded to any specific model.
         # See REQUIREMENTS_V2.md Section 4 for rationale on full automation.
         self.strategist = create_strategist_backend(
-            cli_config=config.cli["claude"],
+            cli_config=config.cli[self.roles.strategist],
             retry_config=config.retry,
             min_response_length=config.models.min_response_length,
+            default_timeout=config.models.default_timeout,
         )
 
     def start(self, game_plan: Path) -> RunContext:

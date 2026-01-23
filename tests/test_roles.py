@@ -185,6 +185,118 @@ class TestGetCriticPair:
             get_critic_pair(roles)
 
 
+class TestExplicitRoleAssignment:
+    """Tests for explicit role assignment mode."""
+
+    def test_explicit_critics_overrides_available(self) -> None:
+        """Test explicit critics list is used instead of deriving from available."""
+        config = Config.from_dict(
+            {
+                "models": {"available": ["claude", "gemini", "codex", "ollama"]},
+                "roles": {
+                    "strategist": "claude",
+                    "critics": ["gemini", "ollama"],  # Explicit subset
+                },
+            }
+        )
+        roles = assign_roles(config)
+
+        assert roles.strategist == "claude"
+        assert roles.critics == ["gemini", "ollama"]
+        assert roles.judge == "claude"  # Defaults to strategist
+
+    def test_explicit_judge_overrides_default(self) -> None:
+        """Test explicit judge overrides strategist default."""
+        config = Config.from_dict(
+            {
+                "roles": {
+                    "strategist": "claude",
+                    "critics": ["gemini", "codex"],
+                    "judge": "gemini",  # Explicit judge different from strategist
+                },
+            }
+        )
+        roles = assign_roles(config)
+
+        assert roles.strategist == "claude"
+        assert roles.critics == ["gemini", "codex"]
+        assert roles.judge == "gemini"
+
+    def test_single_critic_raises_error(self) -> None:
+        """Test error when only one critic specified."""
+        with pytest.raises(ValueError, match="At least 2 critics required"):
+            Config.from_dict(
+                {
+                    "roles": {
+                        "strategist": "claude",
+                        "critics": ["gemini"],  # Only 1 critic
+                    },
+                }
+            )
+
+    def test_duplicate_critics_raises_error(self) -> None:
+        """Test error when duplicate critics specified."""
+        with pytest.raises(ValueError, match="Duplicate critics not allowed"):
+            Config.from_dict(
+                {
+                    "roles": {
+                        "strategist": "claude",
+                        "critics": ["gemini", "gemini", "codex"],
+                    },
+                }
+            )
+
+    def test_strategist_in_critics_removed_with_warning(self) -> None:
+        """Test strategist is auto-removed from critics list with warning."""
+        config = Config.from_dict(
+            {
+                "roles": {
+                    "strategist": "claude",
+                    "critics": ["claude", "gemini", "codex"],  # claude shouldn't be critic
+                },
+            }
+        )
+
+        with pytest.warns(UserWarning, match="Strategist 'claude' found in critics list"):
+            roles = assign_roles(config)
+
+        assert roles.strategist == "claude"
+        assert "claude" not in roles.critics
+        assert set(roles.critics) == {"gemini", "codex"}
+
+    def test_strategist_removal_leaves_too_few_critics(self) -> None:
+        """Test error when removing strategist leaves fewer than 2 critics."""
+        config = Config.from_dict(
+            {
+                "roles": {
+                    "strategist": "claude",
+                    "critics": ["claude", "gemini"],  # Only 1 after removal
+                },
+            }
+        )
+
+        with pytest.raises(InsufficientCriticsError), pytest.warns(UserWarning):
+            assign_roles(config)
+
+    def test_explicit_mode_doesnt_require_available(self) -> None:
+        """Test explicit mode works even if models aren't in available list."""
+        config = Config.from_dict(
+            {
+                "models": {"available": []},  # Empty available
+                "roles": {
+                    "strategist": "claude",
+                    "critics": ["ollama", "mistral"],  # Custom models
+                    "judge": "claude",
+                },
+            }
+        )
+        roles = assign_roles(config)
+
+        assert roles.strategist == "claude"
+        assert roles.critics == ["ollama", "mistral"]
+        assert roles.judge == "claude"
+
+
 class TestRoleAssignmentScenarios:
     """Test various role assignment scenarios from REQUIREMENTS_V2.md."""
 

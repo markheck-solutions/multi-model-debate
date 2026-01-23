@@ -61,6 +61,7 @@ class StrategistBackend(CLIModelBackend):
         retry_config: RetrySettings,
         min_response_length: int = 100,
         error_log: Path | None = None,
+        default_timeout: int = 300,
     ) -> None:
         """Initialize the Strategist backend.
 
@@ -69,6 +70,7 @@ class StrategistBackend(CLIModelBackend):
             retry_config: Retry settings for exponential backoff.
             min_response_length: Minimum chars for valid response.
             error_log: Optional path to log stderr output.
+            default_timeout: Default timeout if not specified in cli_config.
         """
         super().__init__(
             name="Strategist",
@@ -76,6 +78,7 @@ class StrategistBackend(CLIModelBackend):
             retry_config=retry_config,
             min_response_length=min_response_length,
             error_log=error_log,
+            default_timeout=default_timeout,
         )
 
 
@@ -109,17 +112,19 @@ def create_strategist_backend(
     retry_config: RetrySettings,
     min_response_length: int = 100,
     error_log: Path | None = None,
+    default_timeout: int = 300,
 ) -> StrategistBackend:
     """Factory function to create a Strategist backend.
 
-    The Strategist uses the claude CLI for automated responses.
+    The Strategist uses the configured CLI for automated responses.
     See REQUIREMENTS_V2.md Section 4 for rationale on full automation.
 
     Args:
-        cli_config: CLI command configuration (uses claude CLI).
+        cli_config: CLI command configuration.
         retry_config: Retry settings for exponential backoff.
         min_response_length: Minimum response length.
         error_log: Optional error log path.
+        default_timeout: Default timeout if not specified in cli_config.
 
     Returns:
         Configured StrategistBackend instance.
@@ -129,6 +134,7 @@ def create_strategist_backend(
         retry_config=retry_config,
         min_response_length=min_response_length,
         error_log=error_log,
+        default_timeout=default_timeout,
     )
 
 

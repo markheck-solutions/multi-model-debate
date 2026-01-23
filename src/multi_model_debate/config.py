@@ -6,7 +6,7 @@ import tomllib
 from pathlib import Path
 from typing import Any
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 from multi_model_debate.exceptions import ConfigError
 
@@ -125,22 +125,39 @@ class NotificationSettings(BaseModel):
 class RolesSettings(BaseModel):
     """Settings for dynamic role assignment.
 
-    DESIGN DECISION: Judge = Strategist's model family (isolated instance)
+    Supports two modes:
+    - Legacy: Only `strategist` set, derive critics from models.available
+    - Explicit: `critics` list set, use explicit assignments
+
+    DESIGN DECISION: Judge defaults to Strategist's model family (isolated instance)
 
     The Judge evaluates CRITICS, not the Strategist's plan.
     Judge reads Critic A vs Critic B arguments and picks winner.
     Since Judge is different family from both Critics, no bias.
-
-    See REQUIREMENTS_V2.md for full rationale and evidence:
-    - "Prefer a judge from different provider to reduce shared biases" (Evidently AI, 2026)
-    - GPT-4 achieves 80% human agreement as judge (LabelYourData, 2026)
-    - Bias is toward "own writing style" - Judge isn't reading own family's writing
     """
 
     strategist: str | None = Field(
         default=None,
         description="Override strategist model family. If not set, auto-detect from environment.",
     )
+    critics: list[str] | None = Field(
+        default=None,
+        description="Explicit list of critic model families. If not set, derived from available.",
+    )
+    judge: str | None = Field(
+        default=None,
+        description="Judge model family. If not set, defaults to strategist.",
+    )
+
+    @model_validator(mode="after")
+    def validate_explicit_critics(self) -> RolesSettings:
+        """Validate explicit critic configuration."""
+        if self.critics is not None:
+            if len(self.critics) < 2:
+                raise ValueError("At least 2 critics required for adversarial debate")
+            if len(self.critics) != len(set(self.critics)):
+                raise ValueError("Duplicate critics not allowed")
+        return self
 
 
 class PreDebateSettings(BaseModel):

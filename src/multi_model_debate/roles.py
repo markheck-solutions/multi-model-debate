@@ -17,6 +17,7 @@ See REQUIREMENTS_V2.md for full rationale and evidence:
 from __future__ import annotations
 
 import os
+import warnings
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
@@ -73,53 +74,64 @@ def detect_strategist_family(config: Config) -> str:
 
 
 def assign_roles(config: Config) -> RoleAssignment:
-    """Assign roles for a debate based on the strategist.
+    """Assign roles for a debate based on config.
 
-    The assignment follows these rules:
-    - Strategist = detected from current session (or config/env override)
-    - Critics = all available models EXCEPT strategist's family
-    - Judge = strategist's family (isolated instance, judges only critics)
+    Supports two modes:
+    - Explicit: `config.roles.critics` is set - use explicit critic list
+    - Legacy: `config.roles.critics` is None - derive from models.available
 
     Args:
-        config: Configuration with available models and optional strategist override.
+        config: Configuration with available models and role settings.
 
     Returns:
         RoleAssignment with strategist, critics, and judge.
 
     Raises:
-        ValueError: If strategist is not in available models.
-        InsufficientCriticsError: If no critics available (all models same as strategist).
+        ValueError: If strategist is not in available models (legacy mode).
+        InsufficientCriticsError: If fewer than 2 critics available.
     """
     strategist = detect_strategist_family(config)
-    available = config.models.available
 
-    # Validate strategist is available
-    if strategist not in available:
-        raise ValueError(
-            f"Strategist model '{strategist}' not in available models: {available}. "
-            f"Add it to [models].available or change the strategist."
-        )
+    # Check if explicit mode (critics list provided)
+    if config.roles.critics is not None:
+        # Explicit mode: use provided critics list
+        critics = list(config.roles.critics)  # Copy to avoid mutation
 
-    # Critics = all models except strategist's family
-    critics = [m for m in available if m != strategist]
+        # Remove strategist from critics if accidentally included
+        if strategist in critics:
+            warnings.warn(
+                f"Strategist '{strategist}' found in critics list, removing automatically",
+                UserWarning,
+                stacklevel=2,
+            )
+            critics = [c for c in critics if c != strategist]
 
-    if len(critics) < 1:
-        raise InsufficientCriticsError(strategist=strategist, available=available)
+        # Validate we still have enough critics
+        if len(critics) < 2:
+            raise InsufficientCriticsError(strategist=strategist, available=critics)
 
-    # DESIGN: Judge = Strategist's model family (isolated instance)
-    #
-    # The Judge evaluates CRITICS' arguments, not the plan directly.
-    # However, the Judge must read the plan to assess critique validity.
-    #
-    # Bias considerations:
-    # - Same-family Judge may find Strategist's writing style clearer
-    #   than critics from other families do (subtle style affinity)
-    # - This is acceptable because:
-    #   1. Judge is isolated with no memory of creating the plan
-    #   2. Judge scores argument quality, not plan quality
-    #   3. Critics from different families provide diverse perspectives
-    # - Cross-family judging would require 4+ model families minimum
-    judge = strategist
+        # Judge: explicit or default to strategist
+        judge = config.roles.judge if config.roles.judge else strategist
+
+    else:
+        # Legacy mode: derive critics from available models
+        available = config.models.available
+
+        # Validate strategist is available
+        if strategist not in available:
+            raise ValueError(
+                f"Strategist model '{strategist}' not in available models: {available}. "
+                f"Add it to [models].available or change the strategist."
+            )
+
+        # Critics = all models except strategist's family
+        critics = [m for m in available if m != strategist]
+
+        if len(critics) < 1:
+            raise InsufficientCriticsError(strategist=strategist, available=available)
+
+        # Judge defaults to strategist (same family, isolated instance)
+        judge = strategist
 
     return RoleAssignment(
         strategist=strategist,
