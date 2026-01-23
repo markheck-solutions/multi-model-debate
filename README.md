@@ -37,6 +37,20 @@ The whole process takes about 10-15 minutes and runs automatically.
 
 ---
 
+## Prerequisites
+
+You need **at least 2 AI CLIs** installed before using this tool:
+
+| AI | Command | How to Get It |
+|----|---------|---------------|
+| Claude | `claude` | ✅ You already have this if you're using Claude Code |
+| Codex | `codex` | [Install OpenAI Codex CLI](https://github.com/openai/codex) |
+| Gemini | `gemini` | [Install Google Gemini CLI](https://github.com/google-gemini/gemini-cli) |
+
+**You need Claude + at least one other.** Test with: `claude --version`, `codex --version`, `gemini --version`
+
+---
+
 ## Quick Setup: Let Claude Do It For You
 
 If you're already using Claude Code, just paste this into your conversation:
@@ -47,7 +61,7 @@ I want to install the Multi-Model Debate tool. Please:
 1. Check if pipx is installed, if not install it
 2. Run: pipx install git+https://github.com/markheck-solutions/multi-model-debate.git
 3. Verify it works: multi-model-debate --help
-4. Add these instructions to my ~/.claude/CLAUDE.md file (create it if needed):
+4. APPEND these instructions to my ~/.claude/CLAUDE.md file (create the file if it doesn't exist, but DO NOT overwrite any existing content):
 
 ## Multi-Model Debate Tool
 
@@ -67,8 +81,6 @@ When I say "check debate status":
 ```
 
 That's it! Claude will handle the rest. Once done, you can say "run the debate tool" anytime.
-
-> **Note:** You still need at least 2 AI CLIs installed (claude + codex or gemini). See Step 2 below if you need to install them.
 
 ---
 
@@ -100,26 +112,7 @@ multi-model-debate --help
 
 You should see a list of commands.
 
-### Step 2: Make Sure You Have AI CLIs
-
-The tool needs command-line access to multiple AI models. You need **at least 2** of these installed:
-
-| AI | CLI Command | How to Get It |
-|----|-------------|---------------|
-| Claude | `claude` | You already have this if you're using Claude Code |
-| Codex | `codex` | [Install OpenAI Codex CLI](https://github.com/openai/codex) |
-| Gemini | `gemini` | [Install Google Gemini CLI](https://github.com/google-gemini/gemini-cli) |
-
-**The more AIs you have, the more diverse the debate.**
-
-Test that they work:
-```bash
-claude --version
-codex --version
-gemini --version
-```
-
-### Step 3: Teach Claude Code the Commands (For Claude Code Users)
+### Step 2: Teach Claude Code the Commands
 
 If you want to use this tool from inside Claude Code by saying things like "run the debate tool", you need to add instructions to a special file called **CLAUDE.md**.
 
@@ -129,7 +122,7 @@ If you want to use this tool from inside Claude Code by saying things like "run 
 
 **What to add:**
 
-Open (or create) the file and paste this at the bottom:
+Open (or create) the file and **add this at the bottom** (don't replace existing content):
 
 ```markdown
 ## Multi-Model Debate Tool
@@ -157,7 +150,7 @@ When I say "check debate status":
 
 ### Option A: From Inside Claude Code (Recommended)
 
-Once you've done Step 3 above, just talk naturally:
+Once you've completed setup, just talk naturally:
 
 **Start a review:**
 1. Describe your plan to Claude like you normally would
