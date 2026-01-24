@@ -59,7 +59,7 @@ Already using Claude Code? Just paste this into your conversation:
 I want to install the Multi-Model Debate tool. Please:
 
 1. Check if pipx is installed. If not, install it
-2. Run: pipx install git+https://github.com/markheck-solutions/multi-model-debate.git
+2. Run: pipx install multi-model-debate
 3. Verify it works: multi-model-debate --help
 4. APPEND these instructions to my ~/.claude/CLAUDE.md file (create the file if it doesn't exist, but DO NOT overwrite any existing content):
 
@@ -93,10 +93,10 @@ That's it! Claude will handle the rest. Once done, you can say "run the debate t
 Open your terminal (Terminal app on Mac, or Command Prompt/PowerShell on Windows) and run this command:
 
 ```bash
-pipx install git+https://github.com/markheck-solutions/multi-model-debate.git
+pipx install multi-model-debate
 ```
 
-This downloads and installs the tool on your computer.
+This downloads and installs the tool from [PyPI](https://pypi.org/project/multi-model-debate/).
 
 > **Don't have pipx?** Install it first:
 > - **Mac:** `brew install pipx && pipx ensurepath`
