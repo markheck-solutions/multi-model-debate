@@ -41,7 +41,7 @@ jobs:
           pytest tests/ -v --cov=src/multi_model_debate --cov-report=term-missing --cov-report=xml
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         if: matrix.python-version == '3.12'
         with:
           files: coverage.xml
