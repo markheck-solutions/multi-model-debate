@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "multi-model-debate"
-version = "1.0.0"
+version = "1.0.1"
 description = "Let AI models argue so you don't have to"
 readme = "README.md"
 requires-python = ">=3.11"
