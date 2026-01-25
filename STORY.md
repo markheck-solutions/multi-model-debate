@@ -10,29 +10,21 @@ That got me thinking: what if models could debate each other automatically?
 
 ## The Search
 
-I searched for existing tools. ChatGPT told me my idea was brilliant and original. It wasn't. I later learned about CrewAI, AutoGen, and other multi-agent frameworks. But those tools required API keys, and I wanted to use my existing subscriptions. So I decided to build it anyway.
+Initial web searches didn't pull up what I was looking for: something that would let me use my subscription service with Claude, Gemini, and ChatGPT. When I asked ChatGPT for help finding something, it told me such a tool doesn't exist, but my idea was brilliant and original. It wasn't; I later learned about CrewAI, AutoGen, and others. But those tools required API keys, and I wanted to use my existing subscriptions. So, I decided to build it anyway (*months later, I learned about proxies*🙄).
 
 ## The Build
 
-It went badly for months. I'd work with ChatGPT and Claude Code, hit walls, get frustrated, and walk away. Eventually I came back, and with Claude Code's help, got it working.
-
-Halfway through, I learned about proxies that could bypass the API key requirement. By then I was too close to finishing to switch approaches.
+It went badly, at first. I'd work with ChatGPT and Claude Code, hit walls, hallucinations, frustrations, and walk away. Eventually, I got it working with Claude Code.
 
 ## What I Learned
 
-- AI can build production-quality code if you can clearly articulate what you need
-- The skill isn't coding. It's requirements, persistence, and knowing when something is actually done
-- My "AI vocabulary" grew the more I used it. Better questions led to better results
-- Tools I thought were unique already existed. I just couldn't find them until I learned the right search terms
-
-## What I Still Don't Understand
-
-- Why the code is structured the way it is
-- Performance implications and edge cases
-- Whether there are lurking bugs I'd never catch
+- AI can successfully build tools, if you can clearly articulate what you need
+- Requirements, persistence, and implementing *Definition of Done* go a long way
+- My "AI vocabulary" grew the more I used it, creating better questions, in turn, creating better results
 
 ## Why I'm Sharing This
 
-Three years ago, I couldn't have built this without extensive training. Now I can. That shift matters.
+Just a few years ago, I couldn't have built this without extensive training. With AI, now I can. That shift matters.
 
-I'm not posting this as "look at my technical skills." I'm posting it because non-developers can now build working software by effectively directing AI. If that sounds useful to you, here's proof it works.
+I'm not posting this as "look at my technical skills." I'm posting it because non-developers can now build working tools by effectively directing AI. If that sounds useful to you, here's proof it works.
+
