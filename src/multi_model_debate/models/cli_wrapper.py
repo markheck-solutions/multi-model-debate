@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import subprocess
 import sys
 import time
@@ -18,6 +19,13 @@ from multi_model_debate.response_parser import is_valid_response
 
 if TYPE_CHECKING:
     from multi_model_debate.config import CLICommandConfig, RetrySettings
+
+# Environment variables injected by Claude Code that block nested sessions
+_CLAUDECODE_ENV_VARS = frozenset({
+    "CLAUDECODE",
+    "CLAUDE_CODE_ENTRYPOINT",
+    "CLAUDE_CODE_MAX_OUTPUT_TOKENS",
+})
 
 
 @dataclass
@@ -130,6 +138,10 @@ class CLIModelBackend:
         """
         cmd = self._build_command(prompt)
 
+        # Strip Claude Code session markers so nested `claude -p` invocations
+        # aren't blocked by the nested-session guard (CLAUDECODE=1).
+        env = {k: v for k, v in os.environ.items() if k not in _CLAUDECODE_ENV_VARS}
+
         if self.cli_config.input_mode == "stdin":
             result = subprocess.run(
                 cmd,
@@ -137,6 +149,7 @@ class CLIModelBackend:
                 capture_output=True,
                 text=True,
                 timeout=timeout,
+                env=env,
             )
         else:
             result = subprocess.run(
@@ -144,6 +157,7 @@ class CLIModelBackend:
                 capture_output=True,
                 text=True,
                 timeout=timeout,
+                env=env,
             )
 
         cli_result = CLIResult(
