@@ -42,6 +42,7 @@ htmlcov/
 runs/
 .game_plans/
 .advisor/
+.playwright-cli/
 web/gui-*-proof.png
 
 # Frontend
@@ -49,6 +50,10 @@ node_modules/
 web/node_modules/
 web/dist/
 web/tsconfig.tsbuildinfo
+
+# Deployment-local metadata
+.vercel/
+.env.vercel
 
 # Environment
 .env

@@ -1,0 +1,6 @@
+# Deploy only the hosted GUI lane.
+/*
+!web
+!web/**
+!vercel.json
+!.vercelignore

@@ -1,5 +1,6 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { shouldUseDebateApi } from "./api";
 import App from "./App";
 
 afterEach(() => {
@@ -34,5 +35,11 @@ describe("Multi-Model Debate GUI", () => {
 
     expect(await screen.findAllByDisplayValue("GPT-5 Thinking")).toHaveLength(3);
     expect(screen.getAllByText("Fresh instance")).toHaveLength(4);
+  });
+
+  it("uses demo fallback on the hosted Vercel app", () => {
+    expect(shouldUseDebateApi("multi-model-debate.vercel.app", "")).toBe(false);
+    expect(shouldUseDebateApi("localhost", "")).toBe(true);
+    expect(shouldUseDebateApi("multi-model-debate.vercel.app", "http://127.0.0.1:8765")).toBe(true);
   });
 });
