@@ -21,11 +21,13 @@ if TYPE_CHECKING:
     from multi_model_debate.config import CLICommandConfig, RetrySettings
 
 # Environment variables injected by Claude Code that block nested sessions
-_CLAUDECODE_ENV_VARS = frozenset({
-    "CLAUDECODE",
-    "CLAUDE_CODE_ENTRYPOINT",
-    "CLAUDE_CODE_MAX_OUTPUT_TOKENS",
-})
+_CLAUDECODE_ENV_VARS = frozenset(
+    {
+        "CLAUDECODE",
+        "CLAUDE_CODE_ENTRYPOINT",
+        "CLAUDE_CODE_MAX_OUTPUT_TOKENS",
+    }
+)
 
 
 @dataclass

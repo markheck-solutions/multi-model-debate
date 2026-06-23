@@ -14,6 +14,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import socket
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
@@ -37,6 +38,11 @@ INTEGRITY_ENV_VARS = (
 
 # Default config filename
 DEFAULT_CONFIG_FILE = "multi_model_debate.toml"
+
+
+def _current_hostname() -> str:
+    """Return a cross-platform hostname for run manifests."""
+    return socket.gethostname()
 
 
 @dataclass
@@ -197,7 +203,7 @@ def create_run_from_content(
     manifest = {
         "timestamp": datetime.now().isoformat(),
         "user": os.environ.get("USER", "unknown"),
-        "hostname": os.uname().nodename,
+        "hostname": _current_hostname(),
         "working_dir": str(Path.cwd()),
         "script_version": "1.0.0",
         "game_plan": source_name,
@@ -332,7 +338,7 @@ def verify_game_plan_integrity(context: RunContext) -> bool:
     if not game_plan_path.exists():
         return False
 
-    current_hash = hashlib.sha256(game_plan_path.read_bytes()).hexdigest()
+    current_hash = hashlib.sha256(game_plan_path.read_text().encode()).hexdigest()
     original_hash = str(context.manifest.get("game_plan_sha256", ""))
 
     return current_hash == original_hash

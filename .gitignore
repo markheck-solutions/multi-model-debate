@@ -36,11 +36,19 @@ ENV/
 .coverage
 htmlcov/
 .mypy_cache/
+.ruff_cache/
 
 # Tool artifacts
 runs/
 .game_plans/
 .advisor/
+web/gui-*-proof.png
+
+# Frontend
+node_modules/
+web/node_modules/
+web/dist/
+web/tsconfig.tsbuildinfo
 
 # Environment
 .env
