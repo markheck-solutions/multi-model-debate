@@ -6,6 +6,36 @@ You know that feeling when you're about to start a project and you *wish* you co
 
 ![Demo](demo.gif)
 
+## GUI App
+
+The portfolio direction is now a hybrid GUI:
+
+- **Hosted demo lane:** runs in the browser with no API keys required.
+- **Local real-run lane:** starts a localhost runner so subscription CLIs and API keys stay on your machine.
+- **Supabase/Vercel lane:** stores profiles, saved panels, demo run history, and shareable reports without storing raw provider credentials.
+
+Start the local GUI:
+
+```bash
+multi-model-debate app
+```
+
+If the default port is busy:
+
+```bash
+multi-model-debate app --port 8788
+```
+
+For development:
+
+```bash
+cd web
+npm install
+npm run dev
+```
+
+The Vite dev server proxies API calls to the local runner on `127.0.0.1:8787`.
+
 ## What It Does
 
 You describe what you want to build. Two AI models then:

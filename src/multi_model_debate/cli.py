@@ -275,6 +275,48 @@ def status(
         raise typer.Exit(1) from None
 
 
+@app.command("app")
+def launch_gui(
+    host: Annotated[
+        str,
+        typer.Option(
+            "--host",
+            help="Local bind host. Defaults to localhost only.",
+        ),
+    ] = "127.0.0.1",
+    port: Annotated[
+        int,
+        typer.Option(
+            "--port",
+            help="Local app port.",
+        ),
+    ] = 8787,
+    static_dir: Annotated[
+        Path | None,
+        typer.Option(
+            "--static-dir",
+            help="Built web asset directory. Defaults to API-only if not provided.",
+        ),
+    ] = None,
+    no_open: Annotated[
+        bool,
+        typer.Option(
+            "--no-open",
+            help="Do not open the browser automatically.",
+        ),
+    ] = False,
+) -> None:
+    """Start the local GUI runner."""
+    try:
+        from multi_model_debate.local_app.server import serve_app
+
+        console.print(f"[cyan]Starting Multi-Model Debate GUI on http://{host}:{port}[/cyan]")
+        serve_app(host=host, port=port, static_dir=static_dir, open_browser=not no_open)
+    except ValueError as e:
+        console.print(f"[red]Error:[/red] {e}")
+        raise typer.Exit(1) from None
+
+
 def _format_status(status: str) -> str:
     """Format status with color."""
     colors = {
